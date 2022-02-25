@@ -1,25 +1,59 @@
-import logo from './logo.svg';
+
 import './App.css';
+import React, { useState, useRef, useEffect } from 'react';
+import Context from './Components/Context';
+import KalkItems from './Components/KalkItems';
+
+
 
 function App() {
+  const [kalk, setKalk] = useState('')
+  const element = useRef('')
+  const [show, setShow] = useState(false)
+  const element2 = useRef()
+
+
+
+  useEffect(() => {
+    element.current = kalk
+  }, [kalk])
+
+  function hendelClick(e) {
+    setKalk(kalk.concat(e.target.name))
+  }
+
+  function clear() {
+    setKalk('')
+  }
+
+  function back() {
+    setKalk(kalk.slice(0, kalk.length - 1))
+  }
+
+  function result() {
+    setKalk(eval(kalk).toString())
+  }
+
+  function modal() {
+    setShow(!show)
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Context.Provider value={{ hendelClick, clear, back, result }}>
+      <div className='contener'>
+        <input type='text' className='cl_inp1' value={kalk} ref={element} />
+        <KalkItems />
+        <div>
+          <button onClick={modal} className='btn'>OPEN MODAL</button>
+          {show ? <div className='show'>
+            <input className='cl_inp2' ref={element2} type='text' />
+          </div> : null}
+        </div>
+
+      </div>
+    </Context.Provider>
+
   );
+
 }
 
 export default App;
